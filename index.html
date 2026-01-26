@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FF LIKE BOOSTER - VN SERVER</title>
+    <title>FF MOD SKIN GLOBAL - VIRTUAL EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
 
         :root {
-            --ff-yellow: #ffcc00;
-            --ff-red: #ff4655;
-            --ff-blue: #00eeff;
-            --bg-dark: #0f1118;
+            --neon-gold: #ffcc00;
+            --neon-purple: #bc13fe;
+            --neon-blue: #00eeff;
+            --bg-dark: #05070a;
         }
 
         body {
@@ -22,255 +22,235 @@
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 238, 255, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(255, 70, 85, 0.05) 0%, transparent 20%);
+                radial-gradient(circle at 50% 0%, rgba(188, 19, 254, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(0, 238, 255, 0.1) 0%, transparent 40%);
         }
 
         .ff-font { font-family: 'Orbitron', sans-serif; }
 
-        .gaming-card {
-            background: rgba(20, 24, 35, 0.8);
-            backdrop-filter: blur(10px);
+        .item-card {
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
+            overflow: hidden;
         }
 
-        .gaming-card::before {
-            content: '';
+        .item-card.selected {
+            border-color: var(--neon-gold);
+            background: rgba(255, 204, 0, 0.05);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
+        }
+
+        .glow-button {
+            background: linear-gradient(135deg, #bc13fe 0%, #00eeff 100%);
+            box-shadow: 0 0 30px rgba(188, 19, 254, 0.4);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .glow-button:active { transform: scale(0.95); }
+
+        .shimmer {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--ff-blue), transparent);
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 2s infinite;
         }
 
-        .btn-boost {
-            background: linear-gradient(135deg, #ff4655 0%, #ff8000 100%);
-            box-shadow: 0 0 20px rgba(255, 70, 85, 0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        @keyframes shimmer {
+            100% { left: 200%; }
         }
 
-        .btn-boost:active { transform: scale(0.92); }
-
-        .neon-text {
-            color: var(--ff-blue);
-            text-shadow: 0 0 10px rgba(0, 238, 255, 0.5);
+        .floating { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
+        .tab-active {
+            border-bottom: 3px solid var(--neon-blue);
+            color: var(--neon-blue);
         }
 
-        .scanner-line {
-            height: 2px;
-            background: var(--ff-blue);
-            box-shadow: 0 0 15px var(--ff-blue);
-            position: absolute;
-            width: 100%;
-            z-index: 10;
-            animation: scan 2s infinite linear;
-            display: none;
-        }
-
-        .progress-bar-fill {
-            transition: width 0.5s ease-out;
-            background: linear-gradient(90deg, var(--ff-blue), var(--ff-red));
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: var(--ff-blue) !important;
-            box-shadow: 0 0 10px rgba(0, 238, 255, 0.2);
-        }
+        /* Tùy chỉnh thanh cuộn */
+        ::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-6">
+<body class="min-h-screen pb-20">
 
-    <!-- Header -->
-    <header class="w-full max-w-md mb-8 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <div class="w-10 h-10 bg-red-600 rounded flex items-center justify-center rotate-45">
-                <i data-lucide="zap" class="text-white -rotate-45"></i>
-            </div>
-            <div>
-                <h1 class="ff-font text-xl font-black tracking-tighter">FF <span class="text-red-500">BOOSTER</span></h1>
-                <p class="text-[10px] text-gray-500 tracking-[0.3em] font-bold uppercase">VN SERVER EDITION</p>
-            </div>
+    <!-- Header & Logo -->
+    <header class="p-6 flex flex-col items-center">
+        <div class="relative w-20 h-20 mb-4 floating">
+            <div class="absolute inset-0 bg-purple-600 blur-2xl opacity-40 rounded-full"></div>
+            <img src="https://img.icons8.com/color/96/free-fire.png" alt="FF Logo" class="relative z-10">
         </div>
-        <div class="flex flex-col items-end">
-            <span class="text-[10px] text-green-500 font-bold flex items-center gap-1">
-                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                SERVER ONLINE
-            </span>
-            <span class="text-[10px] text-gray-500 font-mono">V.2.0.5</span>
+        <h1 class="ff-font text-2xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
+            MOD SKIN UNLIMITED
+        </h1>
+        <div class="flex items-center gap-2 mt-2">
+            <span class="text-[9px] bg-white/10 px-2 py-0.5 rounded border border-white/10 text-gray-400 uppercase tracking-widest">Virtual Edition</span>
+            <span class="text-[9px] bg-green-500/20 px-2 py-0.5 rounded border border-green-500/20 text-green-400 uppercase tracking-widest">Server: VN-1</span>
         </div>
     </header>
 
-    <!-- Main App -->
-    <main class="w-full max-w-md space-y-6">
-        
-        <!-- Input Section -->
-        <div class="gaming-card p-6 space-y-5 overflow-hidden">
-            <div id="scannerLine" class="scanner-line"></div>
-            
-            <div class="space-y-2">
-                <label class="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                    <i data-lucide="user" class="w-3 h-3"></i> Nhập Player ID
-                </label>
-                <input type="number" id="playerID" placeholder="Ví dụ: 123456789" 
-                       class="w-full bg-black/40 border border-white/10 rounded-lg py-4 px-4 text-xl ff-font text-blue-400 placeholder:text-gray-700 tracking-wider">
+    <!-- Step 1: Input ID -->
+    <section id="step1" class="px-6 max-w-md mx-auto">
+        <div class="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
+            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4 block">Nhập Player ID (UID) của bạn</label>
+            <div class="relative mb-6">
+                <i data-lucide="hash" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400"></i>
+                <input type="number" id="playerID" placeholder="Ví dụ: 192837465" 
+                       class="w-full bg-black/50 border border-white/10 rounded-2xl py-5 pl-12 pr-4 text-xl ff-font text-white outline-none focus:border-purple-500/50">
             </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-500 uppercase">Gói Like</label>
-                    <select id="likeAmount" class="w-full bg-black/40 border border-white/10 rounded-lg py-3 px-3 text-sm font-bold text-white focus:border-blue-500">
-                        <option value="100">+100 LIKE</option>
-                        <option value="500">+500 LIKE</option>
-                        <option value="1000">+1000 LIKE</option>
-                        <option value="5000">+5000 LIKE (HOT)</option>
-                    </select>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-500 uppercase">Tốc độ</label>
-                    <select class="w-full bg-black/40 border border-white/10 rounded-lg py-3 px-3 text-sm font-bold text-white">
-                        <option>Bình thường</option>
-                        <option>Siêu tốc (Pro)</option>
-                    </select>
-                </div>
-            </div>
-
-            <button id="boostBtn" onclick="startBoost()" class="btn-boost w-full py-5 rounded-lg ff-font font-black italic text-lg tracking-widest">
-                KÍCH HOẠT NGAY
+            <button onclick="nextStep()" class="glow-button w-full py-5 rounded-2xl ff-font font-black italic text-lg tracking-widest uppercase">
+                Tiếp tục
             </button>
         </div>
+    </section>
 
-        <!-- Status Card (Hidden by default) -->
-        <div id="statusCard" class="gaming-card p-6 hidden space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div class="flex justify-between items-center">
-                <span class="text-xs font-bold text-blue-400 uppercase tracking-widest" id="statusText">Đang tìm ID...</span>
-                <span class="text-xs font-mono" id="percentText">0%</span>
-            </div>
-            
-            <div class="w-full h-2 bg-black/60 rounded-full overflow-hidden border border-white/5">
-                <div id="progressBar" class="progress-bar-fill h-full w-0"></div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 text-[10px] font-bold text-gray-500">
-                <div class="bg-black/20 p-2 rounded flex justify-between">
-                    <span>SERVER:</span>
-                    <span class="text-white">VIETNAM</span>
-                </div>
-                <div class="bg-black/20 p-2 rounded flex justify-between">
-                    <span>SECURITY:</span>
-                    <span class="text-green-500">ACTIVE</span>
+    <!-- Step 2: Selection (Hidden) -->
+    <section id="step2" class="hidden px-6 max-w-md mx-auto animate-in fade-in duration-500">
+        <!-- Resource Stats -->
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-black/40 border border-yellow-500/20 p-3 rounded-2xl flex items-center gap-3">
+                <img src="https://img.icons8.com/color/48/diamond--v1.png" class="w-6 h-6">
+                <div>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase">Kim cương</p>
+                    <p class="text-xs font-bold text-yellow-500 ff-font">999,999</p>
                 </div>
             </div>
-
-            <div id="logBox" class="bg-black/40 rounded p-3 h-20 overflow-y-auto no-scrollbar font-mono text-[9px] text-gray-400 space-y-1">
-                <!-- Logs will appear here -->
+            <div class="bg-black/40 border border-blue-500/20 p-3 rounded-2xl flex items-center gap-3">
+                <img src="https://img.icons8.com/color/48/coins.png" class="w-6 h-6">
+                <div>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase">Vàng</p>
+                    <p class="text-xs font-bold text-blue-400 ff-font">1,000,000</p>
+                </div>
             </div>
         </div>
 
-        <!-- Features -->
-        <div class="grid grid-cols-3 gap-3">
-            <div class="bg-white/5 p-3 rounded-lg border border-white/5 text-center space-y-1">
-                <i data-lucide="shield-check" class="w-4 h-4 mx-auto text-green-500"></i>
-                <p class="text-[8px] font-bold text-gray-400 uppercase">Anti-Ban</p>
-            </div>
-            <div class="bg-white/5 p-3 rounded-lg border border-white/5 text-center space-y-1">
-                <i data-lucide="zap" class="w-4 h-4 mx-auto text-yellow-500"></i>
-                <p class="text-[8px] font-bold text-gray-400 uppercase">Tức thì</p>
-            </div>
-            <div class="bg-white/5 p-3 rounded-lg border border-white/5 text-center space-y-1">
-                <i data-lucide="unlock" class="w-4 h-4 mx-auto text-blue-500"></i>
-                <p class="text-[8px] font-bold text-gray-400 uppercase">Miễn phí</p>
-            </div>
+        <!-- Tabs -->
+        <div class="flex justify-around mb-6 border-b border-white/5 pb-2">
+            <button class="text-xs font-bold uppercase tracking-widest tab-active py-2">Súng</button>
+            <button class="text-xs font-bold uppercase tracking-widest text-gray-600 py-2">Hành động</button>
+            <button class="text-xs font-bold uppercase tracking-widest text-gray-600 py-2">Đồ họa</button>
         </div>
 
-    </main>
-
-    <!-- Footer Info -->
-    <footer class="mt-auto py-6 text-center space-y-2 opacity-50">
-        <p class="text-[9px] tracking-[0.2em] font-bold">DEVELOPED BY GAMING TOOL TEAM</p>
-        <div class="flex justify-center gap-4">
-             <i data-lucide="facebook" class="w-4 h-4"></i>
-             <i data-lucide="globe" class="w-4 h-4"></i>
-             <i data-lucide="github" class="w-4 h-4"></i>
+        <!-- Grid Items -->
+        <div class="grid grid-cols-2 gap-4 mb-10 h-[350px] overflow-y-auto pr-2" id="itemsList">
+            <!-- Items will be injected here -->
         </div>
-    </footer>
 
-    <!-- Overlay Success -->
-    <div id="successOverlay" class="fixed inset-0 bg-black/95 z-[100] hidden flex flex-col items-center justify-center p-10 text-center animate-in fade-in duration-300">
-        <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.5)]">
+        <button onclick="startInjection()" class="glow-button w-full py-5 rounded-2xl ff-font font-black italic text-lg tracking-widest uppercase sticky bottom-4">
+            Kích hoạt Mod ảo
+        </button>
+    </section>
+
+    <!-- Step 3: Processing (Hidden) -->
+    <section id="step3" class="hidden px-6 max-w-md mx-auto text-center py-10">
+        <div class="relative w-32 h-32 mx-auto mb-8">
+            <div class="absolute inset-0 border-4 border-purple-500/20 rounded-full"></div>
+            <div id="progressCircle" class="absolute inset-0 border-4 border-cyan-500 rounded-full border-t-transparent animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <span id="percentText" class="text-2xl ff-font font-bold">0%</span>
+            </div>
+        </div>
+        <h2 class="ff-font text-xl font-bold italic text-purple-400 mb-2">ĐANG MOD DỮ LIỆU...</h2>
+        <p id="statusLabel" class="text-xs text-gray-500 font-bold uppercase tracking-widest">Đang bypass hệ thống...</p>
+        
+        <div id="logBox" class="mt-10 bg-black/40 border border-white/5 rounded-2xl p-4 text-[9px] font-mono text-left text-gray-500 h-32 overflow-hidden space-y-1">
+            <!-- Logs -->
+        </div>
+    </section>
+
+    <!-- Step 4: Success Overlay -->
+    <div id="successModal" class="fixed inset-0 bg-black/95 z-[100] hidden flex flex-col items-center justify-center p-10 text-center animate-in zoom-in duration-300">
+        <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-8 shadow-[0_0_50px_rgba(34,197,94,0.4)]">
             <i data-lucide="check" class="w-10 h-10 text-white" stroke-width="4"></i>
         </div>
-        <h2 class="ff-font text-2xl font-black italic mb-2 text-white">HOÀN TẤT!</h2>
-        <p class="text-gray-400 text-sm mb-8">Like đã được gửi đến ID của bạn. Vui lòng kiểm tra trong trò chơi sau 5-10 phút.</p>
-        <button onclick="location.reload()" class="w-full max-w-xs py-4 border border-white/20 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">Quay lại</button>
+        <h2 class="ff-font text-3xl font-black italic mb-3">HOÀN TẤT!</h2>
+        <p class="text-gray-400 text-sm mb-10 leading-relaxed">
+            Dữ liệu ảo đã được nạp vào ID: <span id="finalID" class="text-white"></span>.<br/>
+            Lưu ý: Skin và Kim cương là <span class="text-red-500 font-bold underline">ẢO</span>. Người chơi khác chỉ có thể thấy bạn thực hiện các <span class="text-cyan-400 font-bold">Hành động mới</span>.
+        </p>
+        <button onclick="location.reload()" class="w-full max-w-xs py-4 bg-white text-black font-black rounded-xl uppercase tracking-widest text-xs">OK, HIỂU RỒI</button>
     </div>
 
     <script>
         lucide.createIcons();
 
-        function addLog(text) {
+        const skins = [
+            { name: "M1014 Tiếng Hét", img: "🔫" },
+            { name: "AK Rồng Xanh", img: "🐉" },
+            { name: "MP40 Mãng Xà", img: "🐍" },
+            { name: "SCAR Cá Mập", img: "🦈" },
+            { name: "Hành Động: FFF", img: "💃" },
+            { name: "Hành Động: Ngai Vàng", img: "👑" }
+        ];
+
+        // Khởi tạo danh sách vật phẩm
+        const itemsList = document.getElementById('itemsList');
+        skins.forEach(skin => {
+            const div = document.createElement('div');
+            div.className = "item-card p-4 rounded-2xl text-center cursor-pointer";
+            div.innerHTML = `
+                <div class="shimmer"></div>
+                <div class="text-3xl mb-2">${skin.img}</div>
+                <p class="text-[9px] font-bold uppercase tracking-tighter">${skin.name}</p>
+            `;
+            div.onclick = () => div.classList.toggle('selected');
+            itemsList.appendChild(div);
+        });
+
+        function nextStep() {
+            const id = document.getElementById('playerID').value;
+            if (id.length < 5) {
+                alert("Vui lòng nhập ID hợp lệ!");
+                return;
+            }
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        }
+
+        function addLog(msg) {
             const logBox = document.getElementById('logBox');
             const div = document.createElement('div');
-            div.innerHTML = `<span class="text-blue-500 mr-2">></span> ${text}`;
+            div.innerHTML = `<span class="text-blue-500 mr-2">></span> ${msg}`;
             logBox.appendChild(div);
             logBox.scrollTop = logBox.scrollHeight;
         }
 
-        function startBoost() {
+        function startInjection() {
             const id = document.getElementById('playerID').value;
-            if (id.length < 5) {
-                alert("Vui lòng nhập Player ID hợp lệ!");
-                return;
-            }
-
-            // UI Changes
-            document.getElementById('boostBtn').disabled = true;
-            document.getElementById('boostBtn').classList.add('opacity-50');
-            document.getElementById('scannerLine').style.display = 'block';
-            document.getElementById('statusCard').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            document.getElementById('finalID').innerText = id;
 
             let progress = 0;
-            const bar = document.getElementById('progressBar');
-            const percent = document.getElementById('percentText');
-            const statusText = document.getElementById('statusText');
-
             const steps = [
-                {p: 10, t: "Đang kết nối API Server...", log: "Connecting to Garena VN nodes..."},
-                {p: 25, t: "Tìm kiếm ID: " + id, log: "Player found: Level 56, Rank: Diamond IV"},
-                {p: 45, t: "Bypass Security...", log: "SSL Handshake successful. Port 443 open."},
-                {p: 65, t: "Đang chuẩn bị gói Like...", log: "Injecting interaction packets..."},
-                {p: 85, t: "Đang gửi dữ liệu...", log: "Likes successfully queued in database."},
-                {p: 100, t: "Hoàn tất!", log: "Process finished without errors."}
+                "Đang kết nối Cloud-Server...",
+                "Bypass security protocol...",
+                "Injecting visual skins...",
+                "Syncing virtual currency...",
+                "Applying emotes to public profile...",
+                "Finalizing encryption..."
             ];
 
-            let stepIdx = 0;
             const interval = setInterval(() => {
-                progress += Math.random() * 5;
-                if (progress > 100) progress = 100;
-
-                bar.style.width = progress + "%";
-                percent.innerText = Math.floor(progress) + "%";
-
-                if (stepIdx < steps.length && progress >= steps[stepIdx].p) {
-                    statusText.innerText = steps[stepIdx].t;
-                    addLog(steps[stepIdx].log);
-                    stepIdx++;
-                }
-
+                progress += Math.random() * 2;
                 if (progress >= 100) {
+                    progress = 100;
                     clearInterval(interval);
                     setTimeout(() => {
-                        document.getElementById('successOverlay').classList.remove('hidden');
-                        document.getElementById('successOverlay').classList.add('flex');
+                        document.getElementById('successModal').classList.remove('hidden');
                     }, 1000);
                 }
-            }, 150);
+
+                document.getElementById('percentText').innerText = Math.floor(progress) + "%";
+                
+                if (Math.random() > 0.9) {
+                    addLog(steps[Math.floor(Math.random() * steps.length)]);
+                }
+            }, 100);
         }
     </script>
 </body>
