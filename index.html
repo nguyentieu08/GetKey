@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>ZERO PING BYPASS</title>
+    <title>SIFEXPING BYPASS</title>
     <style>
         body { background: #000; color: #ff0000; font-family: 'Segoe UI', sans-serif; text-align: center; }
         .monitor { border: 2px double #ff0000; width: 80%; margin: 50px auto; padding: 20px; box-shadow: 0 0 20px #f00; }
@@ -14,37 +14,31 @@
 <body>
 
 <div class="monitor">
-    <h1>ZERO PING BYPASS</h1>
-    <p>Đang tối ưu hóa Socket cho Playping...</p>
+    <h1>SIFEXPING BYPASS</h1>
+    <p>Đang tối ưu hóa Socket cho SifexPing...</p>
     <div style="background: #222; margin-bottom: 20px;">
         <div id="bar" class="signal"></div>
     </div>
-    <button onclick="bypassLag()">KÍCH HOẠT TRIỆT TIÊU PING</button>
+    <button onclick="bypassLag()">KÍCH HOẠT FIX SIFEXPING</button>
 </div>
 
 <script>
     function bypassLag() {
-        // 1. Triệt tiêu độ trễ phản hồi của trình duyệt
         window.requestAnimationFrame = window.requestAnimationFrame || 
                                      window.webkitRequestAnimationFrame;
-        
-        // 2. Tạo vòng lặp giải phóng RAM (Garbage Collection Trigger)
-        // Việc này giúp giảm Jitter (Ping không ổn định)
+
         setInterval(() => {
             let garbage = new ArrayBuffer(1024 * 1024); // Tạo 1MB rác rồi xóa ngay
             garbage = null;
             document.getElementById('bar').style.width = Math.random() * 100 + "%";
         }, 50);
 
-        // 3. Vô hiệu hóa tính năng "gộp gói tin" (Nagle's Algorithm mô phỏng)
-        // Ép trình duyệt gửi dữ liệu ngay lập tức nếu có phát sinh
         const noDelay = () => {
             console.clear();
             requestAnimationFrame(noDelay);
         };
         noDelay();
 
-        // 4. Chặn đứng các hàm làm chậm hệ thống
         window.alert = function() {};
         window.confirm = function() {};
 
