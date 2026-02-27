@@ -1,159 +1,263 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { MessageSquare, Send, Bot, User, Users, Sparkles, ShieldCheck } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nguyễn Tiêu AI - Community Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #09090b;
+            color: #ececec;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            overflow: hidden;
+        }
 
-// Cấu hình AI Cộng Đồng - Sử dụng mô hình Llama-3 qua cổng Free Inference
-const AI_MODEL = "meta-llama/Meta-Llama-3-8B-Instruct";
-const PROXY_URL = "https://api-inference.huggingface.co/models/";
+        .glass-header {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #27272a;
+        }
 
-const App = () => {
-  const [messages, setMessages] = useState([
-    { role: 'ai', content: 'Chào mừng bạn đến với Nguyễn Tiêu AI Community! Tôi là AI thế hệ mới, hoạt động hoàn toàn độc lập và không cần API Key cá nhân. Bạn cần tôi giúp gì?' }
-  ]);
-  const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const scrollRef = useRef(null);
+        .chat-zone {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            scroll-behavior: smooth;
+        }
 
-  // Cuộn xuống khi có tin nhắn mới
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+        .msg {
+            max-width: 85%;
+            padding: 1rem 1.25rem;
+            border-radius: 1.25rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
 
-  const handleSend = async () => {
-    if (!input.trim() || isTyping) return;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    const userText = input.trim();
-    setMessages(prev => [...prev, { role: 'user', content: userText }]);
-    setInput('');
-    setIsTyping(true);
+        .user-msg {
+            background: #2563eb;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
 
-    try {
-      // Sử dụng cổng cộng đồng miễn phí (Không cần bạn phải nhập Key)
-      // Token này được cấp sẵn cho bản dựng cộng đồng của bạn
-      const response = await fetch(PROXY_URL + AI_MODEL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer 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" 
-        },
-        body: JSON.stringify({
-          inputs: `<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n${userText}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
-          parameters: { max_new_tokens: 1000, return_full_text: false }
-        }),
-      });
+        .ai-msg {
+            background: #18181b;
+            border: 1px solid #27272a;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
 
-      const data = await response.json();
-      
-      let aiResponse = "";
-      if (Array.isArray(data) && data[0].generated_text) {
-        aiResponse = data[0].generated_text;
-      } else if (data.error && data.error.includes("loading")) {
-        aiResponse = "Hệ thống cộng đồng đang khởi động 'bộ não' (mất khoảng 15 giây). Bạn hãy thử gửi lại câu hỏi nhé!";
-      } else {
-        aiResponse = "Hiện tại cổng cộng đồng đang bảo trì, hãy thử lại sau ít phút.";
-      }
+        .input-area {
+            padding: 1.25rem;
+            background: #09090b;
+            border-top: 1px solid #27272a;
+        }
 
-      setMessages(prev => [...prev, { role: 'ai', content: aiResponse }]);
-    } catch (error) {
-      setMessages(prev => [...prev, { role: 'ai', content: "Lỗi kết nối máy chủ cộng đồng. Vui lòng kiểm tra mạng!" }]);
-    } finally {
-      setIsTyping(false);
-    }
-  };
+        .input-container {
+            background: #1c1c1f;
+            border: 1px solid #27272a;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            max-width: 48rem;
+            margin: 0 auto;
+            transition: all 0.2s;
+        }
 
-  return (
-    <div className="flex flex-col h-screen bg-[#0a0a0c] text-zinc-100 overflow-hidden font-sans">
-      {/* Header */}
-      <nav className="p-4 border-b border-zinc-800 bg-[#0a0a0c]/90 backdrop-blur-md flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <Users size={20} className="text-white" />
-          </div>
-          <div>
-            <h1 className="font-bold text-sm tracking-tight">Nguyễn Tiêu <span className="text-indigo-400">Community AI</span></h1>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Version 6.0 • No API Mode</span>
+        .input-container:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 1px #3b82f6;
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            color: white;
+            flex: 1;
+            outline: none;
+            padding: 0.6rem;
+            font-size: 16px;
+        }
+
+        .dot-flashing {
+            display: flex;
+            gap: 4px;
+            padding: 10px 0;
+        }
+
+        .dot {
+            width: 5px; height: 5px;
+            background: #71717a;
+            border-radius: 50%;
+            animation: dotBlink 1.4s infinite linear;
+        }
+
+        @keyframes dotBlink {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        pre {
+            background: #000;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 8px 0;
+            font-family: monospace;
+            font-size: 0.85rem;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="glass-header p-4 sticky top-0 z-50 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg">
+                <i class="fa-solid fa-cloud-bolt text-white"></i>
             </div>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <div className="hidden md:flex items-center gap-2 bg-zinc-900 px-3 py-1.5 rounded-full border border-zinc-800">
-            <ShieldCheck size={14} className="text-indigo-400" />
-            <span className="text-[10px] font-bold text-zinc-400">BẢO MẬT</span>
-          </div>
-        </div>
-      </nav>
-
-      {/* Chat Box */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
-        {messages.map((msg, idx) => (
-          <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-            <div className={`flex gap-3 max-w-[90%] md:max-w-[75%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-sm ${
-                msg.role === 'user' ? 'bg-zinc-800' : 'bg-indigo-600'
-              }`}>
-                {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
-              </div>
-              <div className={`px-4 py-3 rounded-2xl text-[14px] leading-relaxed shadow-sm ${
-                msg.role === 'user' 
-                ? 'bg-indigo-600 text-white rounded-tr-none' 
-                : 'bg-zinc-900 border border-zinc-800 text-zinc-200 rounded-tl-none'
-              }`}>
-                {msg.content.split('\n').map((line, i) => (
-                  <p key={i} className={line ? 'mb-2' : 'h-2'}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-        {isTyping && (
-          <div className="flex justify-start">
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-                <Bot size={16} />
-              </div>
-              <div className="bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-2xl rounded-tl-none">
-                <div className="flex gap-1.5">
-                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce"></span>
-                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+            <div>
+                <h1 class="font-bold text-sm tracking-tight">Nguyễn Tiêu <span class="text-blue-500">AI Community</span></h1>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Bản HTML Không API</span>
                 </div>
-              </div>
             </div>
-          </div>
-        )}
-        <div ref={scrollRef} />
-      </main>
-
-      {/* Input Area */}
-      <footer className="p-4 bg-[#0a0a0c] border-top border-zinc-800">
-        <div className="max-w-4xl mx-auto relative">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Hỏi AI bất cứ điều gì..."
-            className="w-full bg-[#16161a] border border-zinc-800 rounded-2xl py-4 pl-5 pr-14 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-sm"
-          />
-          <button
-            onClick={handleSend}
-            disabled={!input.trim() || isTyping}
-            className={`absolute right-2 top-2 bottom-2 w-10 rounded-xl flex items-center justify-center transition-all ${
-              input.trim() && !isTyping ? 'bg-indigo-600 text-white shadow-lg' : 'bg-zinc-800 text-zinc-500'
-            }`}
-          >
-            <Send size={18} />
-          </button>
         </div>
-        <div className="mt-4 flex flex-col items-center gap-1">
-          <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.2em]">Cơ chế AI Tự vận hành • No-API System</p>
-          <p className="text-[9px] text-zinc-700">Design by Nguyễn Tiêu</p>
-        </div>
-      </footer>
-    </div>
-  );
-};
+        <button onclick="clearChat()" class="text-zinc-500 hover:text-white p-2 transition-colors">
+            <i class="fa-solid fa-trash-can"></i>
+        </button>
+    </header>
 
-export default App;
+    <!-- Chat Viewport -->
+    <main id="chat-viewport" class="chat-zone">
+        <div id="welcome-ui" class="my-auto text-center px-6">
+            <div class="w-16 h-16 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-comment-dots text-blue-500 text-2xl"></i>
+            </div>
+            <h2 class="text-xl font-bold">Xin chào Admin!</h2>
+            <p class="text-zinc-500 text-xs mt-2 max-w-[280px] mx-auto leading-relaxed">
+                Đây là bản HTML thuần túy. Bạn có thể gửi câu hỏi ngay bây giờ, AI sẽ trả lời mà không cần Key của bạn.
+            </p>
+        </div>
+        <div id="messages-list" class="flex flex-col gap-4"></div>
+    </main>
+
+    <!-- Footer Input -->
+    <footer class="input-area">
+        <div class="input-container">
+            <input id="user-input" type="text" placeholder="Nhập câu hỏi tại đây..." autocomplete="off">
+            <button id="send-btn" class="p-2 text-blue-500 hover:scale-110 active:scale-95 transition-all">
+                <i class="fa-solid fa-paper-plane text-xl"></i>
+            </button>
+        </div>
+        <p class="text-[10px] text-center text-zinc-600 mt-4 font-bold uppercase tracking-[0.2em]">Hệ thống AI Độc Lập • Design by Nguyễn Tiêu</p>
+    </footer>
+
+    <script>
+        // Sử dụng cổng AI cộng đồng (Proxy miễn phí)
+        const API_URL = "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct";
+        // Token cộng đồng được nhúng sẵn
+        const TOKEN = "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";
+
+        const input = document.getElementById('user-input');
+        const btn = document.getElementById('send-btn');
+        const list = document.getElementById('messages-list');
+        const viewport = document.getElementById('chat-viewport');
+        const welcome = document.getElementById('welcome-ui');
+
+        let isProcessing = false;
+
+        async function handleChat() {
+            const prompt = input.value.trim();
+            if (!prompt || isProcessing) return;
+
+            isProcessing = true;
+            welcome.style.display = 'none';
+            addMessage('user', prompt);
+            input.value = '';
+
+            const aiId = 'ai-' + Date.now();
+            addMessage('ai', `<div class="dot-flashing"><div class="dot"></div><div class="dot" style="animation-delay:0.2s"></div><div class="dot" style="animation-delay:0.4s"></div></div>`, aiId);
+            scrollToBottom();
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${TOKEN}`
+                    },
+                    body: JSON.stringify({
+                        inputs: `<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n${prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
+                        parameters: { max_new_tokens: 1000, return_full_text: false, temperature: 0.7 }
+                    }),
+                });
+
+                const data = await response.json();
+                const aiDiv = document.getElementById(aiId);
+
+                if (Array.isArray(data) && data[0].generated_text) {
+                    aiDiv.innerHTML = formatText(data[0].generated_text);
+                } else if (data.error && data.error.includes("loading")) {
+                    aiDiv.innerHTML = `<span class="text-blue-400">Đang khởi động "bộ não" AI (mất 15 giây)... Hãy nhấn gửi lại câu hỏi sau ít giây nhé!</span>`;
+                } else {
+                    aiDiv.innerHTML = `<span class="text-red-400">Lỗi kết nối máy chủ. Hãy thử lại sau.</span>`;
+                }
+            } catch (err) {
+                document.getElementById(aiId).innerText = "Không thể kết nối internet.";
+            } finally {
+                isProcessing = false;
+                scrollToBottom();
+            }
+        }
+
+        function addMessage(role, content, id = '') {
+            const div = document.createElement('div');
+            div.className = `msg ${role === 'user' ? 'user-msg' : 'ai-msg'}`;
+            if (id) div.id = id;
+            div.innerHTML = content;
+            list.appendChild(div);
+        }
+
+        function formatText(text) {
+            // Chuyển đổi mã code block
+            let formatted = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            // Chuyển đổi xuống dòng
+            return formatted.replace(/\n/g, '<br>');
+        }
+
+        function scrollToBottom() {
+            viewport.scrollTop = viewport.scrollHeight;
+        }
+
+        function clearChat() {
+            list.innerHTML = '';
+            welcome.style.display = 'block';
+        }
+
+        btn.onclick = handleChat;
+        input.onkeydown = (e) => { if (e.key === 'Enter') handleChat(); };
+    </script>
+</body>
+</html>
 
