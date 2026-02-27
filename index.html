@@ -2,305 +2,152 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gemini - Nguyễn Tiêu AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nguyễn Tiêu AI - Zero API Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
-        
-        :root {
-            --bg-dark: #131314;
-            --surface-dark: #1e1f20;
-            --text-main: #e3e3e3;
-            --gemini-gradient: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
-        }
-
-        body {
-            font-family: 'Google Sans', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            height: 100dvh;
-            margin: 0;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* Sidebar Style */
-        .sidebar {
-            width: 280px;
-            background-color: #1a1a1c;
-            display: flex;
-            flex-direction: column;
-            padding: 1rem;
-            transition: all 0.3s;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
-        }
-
-        .new-chat-btn {
-            background-color: #28292a;
-            border-radius: 1.5rem;
-            padding: 0.8rem 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .new-chat-btn:hover { background-color: #333537; }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 2rem 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-        }
-
-        .msg-row {
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
-            display: flex;
-            gap: 1.5rem;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .ai-avatar { background: var(--gemini-gradient); }
-        .user-avatar { background: #5f6368; }
-
-        .message-content {
-            flex: 1;
-            font-size: 1.05rem;
-            line-height: 1.7;
-        }
-
-        /* Input Area */
-        .input-area {
-            padding: 1rem 1rem 2rem 1rem;
-            background: linear-gradient(transparent, var(--bg-dark) 20%);
-        }
-
-        .input-wrapper {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: var(--surface-dark);
-            border-radius: 2rem;
-            padding: 0.5rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        input {
-            background: transparent;
-            border: none;
-            color: white;
-            flex: 1;
-            outline: none;
-            padding: 0.8rem 0;
-            font-size: 1rem;
-        }
-
-        .action-btn {
-            color: #c4c7c5;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-
-        .action-btn:hover { background: #333537; color: white; }
-
-        /* Key Modal */
-        #key-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .modal-box {
-            background: #1e1f20;
-            padding: 2rem;
-            border-radius: 1.5rem;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-        }
-
-        pre { background: #000; padding: 1rem; border-radius: 0.8rem; overflow-x: auto; margin: 1rem 0; border: 1px solid #333; }
-        code { font-family: monospace; color: #8ab4f8; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0c0c0e; color: #e2e2e4; height: 100dvh; display: flex; flex-direction: column; margin: 0; }
+        .chat-container { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+        .bubble { max-width: 85%; padding: 1rem 1.25rem; border-radius: 1.25rem; font-size: 0.95rem; line-height: 1.6; position: relative; }
+        .ai-bubble { background: #1a1a1d; border: 1px solid #2d2d30; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .user-bubble { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .input-box { background: #0c0c0e; border-top: 1px solid #1f1f22; padding: 1.2rem; }
+        .progress-container { display: none; position: fixed; top: 0; left: 0; right: 0; height: 4px; background: #1a1a1d; z-index: 100; }
+        #progress-bar { height: 100%; background: #4f46e5; width: 0%; transition: width 0.3s; }
+        .loading-text { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #6366f1; font-weight: bold; }
+        pre { background: #000; padding: 10px; border-radius: 8px; overflow-x: auto; margin: 10px 0; border: 1px solid #333; }
+        code { font-family: monospace; color: #818cf8; }
     </style>
 </head>
 <body>
 
-    <!-- Modal yêu cầu Key (Chỉ hiện 1 lần) -->
-    <div id="key-modal">
-        <div class="modal-box">
-            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-key text-white text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-2">Kết nối Gemini API</h3>
-            <p class="text-zinc-400 text-sm mb-6">Để sài ké hạ tầng của Google, vui lòng nhập API Key của bạn. Khóa này sẽ được lưu an toàn trên trình duyệt của bạn.</p>
-            <input id="api-key-input" type="password" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 mb-4 outline-none focus:border-blue-500" placeholder="AIzaSy...">
-            <button onclick="saveKey()" class="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-zinc-200 transition-colors">Bắt đầu ngay</button>
-            <p class="mt-4 text-[10px] text-zinc-500 uppercase tracking-widest">Hạ tầng Google AI chính hãng</p>
-        </div>
+    <div id="loading-overlay" class="progress-container">
+        <div id="progress-bar"></div>
     </div>
 
-    <aside class="sidebar">
-        <div class="new-chat-btn" onclick="location.reload()">
-            <i class="fa-solid fa-plus"></i>
-            <span>Cuộc trò chuyện mới</span>
-        </div>
-        <div class="mt-auto p-2 text-[10px] text-zinc-500 font-bold uppercase tracking-widest text-center">
-            Nguyễn Tiêu AI v3.0
-        </div>
-    </aside>
-
-    <main class="main-content">
-        <header class="p-4 flex items-center justify-between">
-            <span class="text-xl font-medium">Gemini <span class="text-zinc-500 text-sm">Advanced</span></span>
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center cursor-pointer" onclick="clearKey()">
-                    <i class="fa-solid fa-gear text-xs"></i>
-                </div>
+    <header class="p-4 border-b border-zinc-800 flex items-center justify-between sticky top-0 bg-[#0c0c0e]/80 backdrop-blur-md z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                <i class="fa-solid fa-bolt text-white"></i>
             </div>
-        </header>
-
-        <div id="chat-viewport" class="chat-container">
-            <div id="welcome-msg" class="my-auto text-center px-4">
-                <h1 class="text-4xl md:text-5xl font-medium mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-transparent">
-                    Chào Admin, tôi có thể giúp gì cho bạn?
-                </h1>
+            <div>
+                <h1 class="font-bold text-sm">Nguyễn Tiêu <span class="text-indigo-400">AI v5</span></h1>
+                <div id="status" class="loading-text">Đang chuẩn bị bộ não...</div>
             </div>
-            <div id="message-list" class="flex flex-col gap-10"></div>
         </div>
+        <button onclick="location.reload()" class="text-zinc-500 hover:text-white"><i class="fa-solid fa-rotate-right"></i></button>
+    </header>
 
-        <footer class="input-area">
-            <div class="input-wrapper">
-                <input id="prompt-input" type="text" placeholder="Nhập câu hỏi tại đây..." autocomplete="off">
-                <div class="flex gap-1">
-                    <button id="send-btn" class="action-btn">
-                        <i class="fa-solid fa-paper-plane text-lg text-blue-500"></i>
-                    </button>
-                </div>
+    <main id="viewport" class="chat-container">
+        <div id="hero" class="my-auto text-center px-6">
+            <div class="w-20 h-20 bg-indigo-500/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 border border-indigo-500/20">
+                <i class="fa-solid fa-microchip text-indigo-500 text-3xl"></i>
             </div>
-            <p class="text-center text-[10px] text-zinc-500 mt-4">
-                Gemini có thể đưa ra thông tin không chính xác về con người.
+            <h2 class="text-2xl font-bold mb-3">AI Cộng Đồng 100% Free</h2>
+            <p class="text-zinc-500 text-sm max-w-xs mx-auto mb-8">
+                Hệ thống không sử dụng API. Toàn bộ trí tuệ được tải trực tiếp vào máy bạn. Bảo mật - Riêng tư - Miễn phí.
             </p>
-        </footer>
+        </div>
+        <div id="chat-list"></div>
     </main>
 
+    <footer class="input-box">
+        <div class="max-w-3xl mx-auto flex items-center gap-3 bg-[#1a1a1d] rounded-2xl p-2 border border-zinc-800">
+            <input id="chat-input" type="text" placeholder="Hãy đợi AI tải xong bộ não..." class="flex-1 bg-transparent border-none outline-none px-4 text-sm" disabled>
+            <button id="send-btn" class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white opacity-50 cursor-not-allowed" disabled>
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+        <p class="text-[9px] text-center text-zinc-600 mt-4 font-bold uppercase tracking-[0.2em]">Hệ thống AI Độc Lập • Phát triển bởi Nguyễn Tiêu</p>
+    </footer>
+
     <script type="module">
-        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+        // Chúng ta sử dụng Transformers.js - công nghệ chạy AI trực tiếp trên trình duyệt
+        import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
 
-        let API_KEY = localStorage.getItem('gemini_key');
-        if (API_KEY) document.getElementById('key-modal').style.display = 'none';
-
-        window.saveKey = () => {
-            const val = document.getElementById('api-key-input').value.trim();
-            if (val) {
-                localStorage.setItem('gemini_key', val);
-                location.reload();
-            }
-        };
-
-        window.clearKey = () => {
-            if(confirm("Bạn muốn xóa API Key hiện tại?")) {
-                localStorage.removeItem('gemini_key');
-                location.reload();
-            }
-        };
-
-        const viewport = document.getElementById('chat-viewport');
-        const list = document.getElementById('message-list');
-        const input = document.getElementById('prompt-input');
+        // Tối ưu cấu hình
+        env.allowLocalModels = false;
+        
+        const status = document.getElementById('status');
+        const progressOverlay = document.getElementById('loading-overlay');
+        const progressBar = document.getElementById('progress-bar');
+        const input = document.getElementById('chat-input');
         const btn = document.getElementById('send-btn');
-        const welcome = document.getElementById('welcome-msg');
+        const list = document.getElementById('chat-list');
+        const viewport = document.getElementById('viewport');
+        const hero = document.getElementById('hero');
 
-        if (API_KEY) {
-            const genAI = new GoogleGenerativeAI(API_KEY);
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            const chat = model.startChat({ history: [] });
+        let generator;
 
-            async function handleChat() {
-                const text = input.value.trim();
-                if (!text) return;
+        // Tải mô hình AI
+        async function loadModel() {
+            progressOverlay.style.display = 'block';
+            try {
+                // Sử dụng mô hình Flan-T5 hoặc tương đương (Rất nhẹ, chỉ ~100MB nhưng hiểu tiếng Việt cơ bản)
+                generator = await pipeline('text2text-generation', 'Xenova/flan-t5-small', {
+                    progress_callback: (p) => {
+                        const percent = Math.round(p.progress || 0);
+                        progressBar.style.width = percent + '%';
+                        status.innerText = `Đang tải bộ não: ${percent}%`;
+                    }
+                });
 
-                welcome.style.display = 'none';
-                append('user', text);
-                input.value = '';
-
-                const aiId = 'ai-' + Date.now();
-                append('ai', '<div class="flex gap-1 py-2"><div class="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce"></div><div class="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce [animation-delay:0.2s]"></div><div class="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce [animation-delay:0.4s]"></div></div>', aiId);
-                scroll();
-
-                try {
-                    const result = await chat.sendMessage(text);
-                    const response = await result.response;
-                    document.getElementById(aiId).innerHTML = format(response.text());
-                } catch (err) {
-                    document.getElementById(aiId).innerHTML = `<span class="text-red-400 italic">Lỗi: ${err.message}. Hãy kiểm tra lại API Key.</span>`;
-                }
-                scroll();
+                status.innerText = "Hệ thống đã sẵn sàng";
+                status.classList.replace('text-zinc-500', 'text-green-500');
+                input.disabled = false;
+                input.placeholder = "Hỏi AI của bạn bất cứ điều gì...";
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                progressOverlay.style.display = 'none';
+            } catch (err) {
+                status.innerText = "Lỗi tải bộ não. Hãy tải lại trang!";
+                console.error(err);
             }
-
-            btn.onclick = handleChat;
-            input.onkeydown = (e) => { if (e.key === 'Enter') handleChat(); };
         }
 
-        function append(role, content, id = '') {
-            const row = document.createElement('div');
-            row.className = 'msg-row';
-            const avatar = role === 'user' ? '<div class="avatar user-avatar"><i class="fa-solid fa-user text-xs text-white"></i></div>' : '<div class="avatar ai-avatar"><i class="fa-solid fa-sparkles text-xs text-white"></i></div>';
+        loadModel();
+
+        async function handleChat() {
+            const prompt = input.value.trim();
+            if (!prompt || !generator) return;
+
+            hero.style.display = 'none';
+            addBubble('user', prompt);
+            input.value = '';
             
-            row.innerHTML = `
-                ${avatar}
-                <div class="message-content" ${id ? `id="${id}"` : ''}>${content}</div>
-            `;
-            list.appendChild(row);
+            const aiId = 'ai-' + Date.now();
+            addBubble('ai', 'Đang suy nghĩ...', aiId);
+            scroll();
+
+            try {
+                // AI xử lý trực tiếp trên máy bạn
+                const output = await generator(prompt, {
+                    max_new_tokens: 200,
+                    temperature: 0.7,
+                });
+
+                const response = output[0].generated_text;
+                document.getElementById(aiId).innerText = response || "Tôi đang học thêm, hãy hỏi câu khác nhé!";
+            } catch (err) {
+                document.getElementById(aiId).innerText = "Lỗi xử lý nội bộ.";
+            }
+            scroll();
         }
 
-        function format(t) {
-            return t.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>').replace(/\n/g, '<br>');
+        function addBubble(role, content, id = '') {
+            const div = document.createElement('div');
+            div.className = `bubble ${role === 'user' ? 'user-bubble' : 'ai-bubble'} mb-4`;
+            if (id) div.id = id;
+            div.innerText = content;
+            list.appendChild(div);
         }
 
         function scroll() { viewport.scrollTop = viewport.scrollHeight; }
+
+        btn.onclick = handleChat;
+        input.onkeydown = (e) => { if (e.key === 'Enter') handleChat(); };
     </script>
 </body>
 </html>
